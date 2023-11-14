@@ -28,9 +28,15 @@ body{
     box-shadow: 0 0 128px 0 rgba(0, 0, 0,0.1),0 32px 64px -48px rgba(0,0,0,0.5);
 
 }
+
 .form-box{
     width: 450px;
     margin: 0px 10px;
+}
+.register-box{
+    padding: 25px 40px;
+    margin: 30px 0px;
+
 }
 .form-box header{
     font-size: 25px;
