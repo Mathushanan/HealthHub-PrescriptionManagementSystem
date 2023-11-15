@@ -31,7 +31,7 @@
                     <input type="submit" class="btn" name="submit" value="LOGIN">
                 </div>
                 <div class="link">
-                    Don't have Account? <a href="uploadPrescription.php">SIGNUP</a>
+                    Don't have Account? <a href="register.php">SIGNUP</a>
                 </div>
             </form>
         </div>

@@ -17,6 +17,46 @@
     </div>
     <div class="container">
         <div class="box form-box register-box">
+
+        <?php
+        include("config.php");
+        if(isset($_POST['submit'])){
+
+            $name=$_POST['name'];
+            $email=$_POST['email'];
+            $mobile=$_POST['mobile'];
+            $address=$_POST['address'];
+            $dob=$_POST['dob'];
+            $password=$_POST['password'];
+
+            $verifyQuery=mysqli_query($connection,"SELECT * FROM users WHERE email='$email'");
+
+            if(mysqli_num_rows($verifyQuery)!=0){
+
+                echo "
+                <div class='messageBox'>
+                    <p>Email is already registered!</p>
+                <div><br>";
+                echo "
+                <a href='register.php'><button class='btn'>GO BACK</button></a>
+                ";
+
+            }else{
+                mysqli_query($connection,"INSERT INTO users (name,email,address,mobile,dob,password) VALUES ('$name','$email','$address','$mobile','$dob','$password')");
+                echo "
+                <div class='messageBox'>
+                    <p>Registration successfull!</p>
+                <div><br>";
+                echo "
+                <a href='index.php'><button class='btn'>LOGIN</button></a>
+                ";
+
+            }
+
+        
+        }else{
+
+        ?>
             <header>Register</header>
             <form action="" method="post">
                 <div class="field input">
@@ -55,6 +95,7 @@
                 </div>
             </form>
         </div>
+        <?php } ?>
     </div>
     
     
