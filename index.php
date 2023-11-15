@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealthHub</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
 </head>
 <body>
+    <div class="nav">
+        <div class="logo">
+            <p>Health<span class="sub-logo">Hub</span></p>
+        </div>
+        <div class="right-links">
+            
+        </div>
+    </div>
     <div class="container">
         <div class="box form-box">
             <header>Login</header>
@@ -23,7 +31,7 @@
                     <input type="submit" class="btn" name="submit" value="LOGIN">
                 </div>
                 <div class="link">
-                    Don't have Account? <a href="register.php">SIGNUP</a>
+                    Don't have Account? <a href="uploadPrescription.php">SIGNUP</a>
                 </div>
             </form>
         </div>
