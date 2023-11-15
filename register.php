@@ -34,7 +34,7 @@
             if(mysqli_num_rows($verifyQuery)!=0){
 
                 echo "
-                <div class='messageBox'>
+                <div class='ErrorMessageBox'>
                     <p>Email is already registered!</p>
                 <div><br>";
                 echo "
@@ -44,7 +44,7 @@
             }else{
                 mysqli_query($connection,"INSERT INTO users (name,email,address,mobile,dob,password) VALUES ('$name','$email','$address','$mobile','$dob','$password')");
                 echo "
-                <div class='messageBox'>
+                <div class='SuccessMessageBox'>
                     <p>Registration successfull!</p>
                 <div><br>";
                 echo "

@@ -96,6 +96,26 @@ body{
     margin-bottom: 10px;
     margin-top: 20px;
 }
+.ErrorMessageBox{
+    text-align: center;
+    background-color:#f9eded ;
+    padding: 15px 0px;
+    border: 1px solid ;
+    border-radius: 5px;
+    color:red;
+
+}
+.SuccessMessageBox{
+    text-align: center;
+    background-color:#d9f9d9;
+    padding: 15px 0px;
+    border: 1px solid ;
+    border-radius: 5px;
+    color:#006400;
+
+}
+
+
 
 /***uploadPrescription.php***/
 .nav{
@@ -124,7 +144,6 @@ body{
     border:none;
 
 }
-
 
 textarea{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
