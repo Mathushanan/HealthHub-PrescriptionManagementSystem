@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+echo "Session email: " . $_SESSION['email'];
 include("config.php");
 
 
@@ -29,22 +30,58 @@ if(!isset($_SESSION['email'])){
     </div>
     <div class="container">
         <div class="box form-box register-box">
+            <?php
+
+            if(isset($_POST["submit"])){
+
+                $note=mysqli_real_escape_string($connection,$_POST['note']);
+                $deliveryAddress=mysqli_real_escape_string($connection,$_POST['deliveryAddress']);
+                $deliveryTime=mysqli_real_escape_string($connection,$_POST['deliveryTime']);
+                $email=$_SESSION['email'];
+                
+                $insertQuery="INSERT INTO prescriptions (email,deliveryAddress,note,deliveryTime) VALUES (?,?,?,?)";
+                $statement=$connection->prepare($insertQuery);
+                $statement->bind_param("ssss",$email,$deliveryAddress,$note,$deliveryTime);
+
+                if($statement->execute()){
+                    echo "
+                        <div class='SuccessMessageBox'>
+                            <p>Prescription uploaded successfully!</p>
+                        <div><br>";
+                    echo "
+                        <a href='uploadPrescription.php'><button class='btn'>GO BACK</button></a>
+                    ";
+                }else{
+                    echo "
+                        <div class='ErrorMessageBox'>
+                             <p>Failed to upload the prescription!</p>
+                        <div><br>";
+                    echo "
+                        <a href='uploadPrescriptions.php'><button class='btn'>GO BACK</button></a>
+                    ";
+                }
+            }else{
+
+            
+
+
+            ?>
             <header>Upload Prescription</header>
             <form action="" method="post">
                 <div class="field input">
-                    <label for="name">Prescription Images</label>
-                    <input type="file" class="fileUpload" id="fileUpload" name="fileUpload[]" accept=".jpg, .jpeg, .png" multiple>
+                    <label for="fileUpload">Prescription Images</label>
+                    <input type="file" class="fileUpload" id="fileUpload" name="image" accept=".jpg, .jpeg, .png" multiple>
                 </div>
                 <div class="field input">
-                    <label for="email">Note</label>
-                    <textarea id="myTextArea" name="myTextArea" rows="4" cols="50"></textarea>
+                    <label for="note">Note</label>
+                    <textarea id="note" name="note" rows="4" cols="50"></textarea>
                 </div>
                 <div class="field input">
-                    <label for="mobile">Delivery Address</label>
-                    <input type="text" name="mobile" id="mobile" required>
+                    <label for="deliveryAddress">Delivery Address</label>
+                    <input type="text" name="deliveryAddress" id="deliveryAddress" required>
                 </div>
                 <div class="field input">
-                    <label for="address">Delivery Time</label>
+                    <label for="deliveryTime">Delivery Time</label>
                     <select id="deliveryTime" name="deliveryTime">
                         <option value="8-10AM">8:00 AM - 10:00 AM</option>
                         <option value="10-12PM">10:00 AM - 12:00 PM</option>
@@ -62,6 +99,7 @@ if(!isset($_SESSION['email'])){
                 </div>
             </form>
         </div>
+        <?php } ?>
     </div>
     
     
