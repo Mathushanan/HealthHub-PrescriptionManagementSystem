@@ -1,3 +1,15 @@
+<?php
+
+session_start();
+include("config.php");
+
+
+if(!isset($_SESSION['email'])){
+    header("Location: index.php");
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +24,7 @@
             <p>Health<span class="sub-logo">Hub</span></p>
         </div>
         <div class="right-links">
-            <a href="index.php"><button class="btn">LOGOUT</button></a>
+            <a href="logout.php"><button class="btn">LOGOUT</button></a>
         </div>
     </div>
     <div class="container">

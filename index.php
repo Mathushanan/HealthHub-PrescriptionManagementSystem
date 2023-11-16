@@ -1,3 +1,8 @@
+<?php
+
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +22,44 @@
     </div>
     <div class="container">
         <div class="box form-box">
+            <?php
+
+            include("config.php");
+            if(isset($_POST["submit"])){
+
+                $email=mysqli_real_escape_string($connection,$_POST['email']);
+                $password=mysqli_real_escape_string($connection,$_POST['password']);
+                $result=mysqli_query($connection,"SELECT * FROM users WHERE email='$email' AND password='$password'");
+                
+
+                if($result && mysqli_num_rows($result) > 0){
+
+                    $row=mysqli_fetch_assoc($result);
+                    $_SESSION['email']=$row['email'];
+                    $_SESSION['name']=$row['name'];
+                    $_SESSION['password']=$row['password'];
+                    $_SESSION['dob']=$row['dob'];
+                    $_SESSION['mobile']=$row['mobile'];
+                    $_SESSION['address']=$row['address'];
+
+                    header("Location:uploadPrescription.php");
+                    exit();
+                    
+                }else{
+                    echo "
+                         <div class='ErrorMessageBox'>
+                            <p>Wrong Email or Password!</p>
+                         <div><br>";
+                    echo "
+                        <a href='index.php'><button class='btn'>GO BACK</button></a>
+                    ";
+                   
+                }
+                
+            }else{
+
+            
+            ?>
             <header>Login</header>
             <form action="" method="post">
                 <div class="field input">
@@ -25,7 +68,7 @@
                 </div>
                 <div class="field input">
                     <label for="password">Password</label>
-                    <input type="text" name="password" id="password" required>
+                    <input type="password" name="password" id="password" required>
                 </div>
                 <div class="field">
                     <input type="submit" class="btn" name="submit" value="LOGIN">
@@ -35,6 +78,7 @@
                 </div>
             </form>
         </div>
+        <?php } ?>
     </div>
     
     
