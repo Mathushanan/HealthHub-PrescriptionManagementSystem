@@ -51,7 +51,7 @@ session_start();
                           <td>$row[deliveryTime]</td>
                           <td>
                           <form method='post' action='prepareQuotation.php'>
-                          <input type='hidden' name='userId' value='$row[email]' />
+                          <input type='hidden' name='prescriptionId' value='$row[prescriptionId]' />
                           <button type='submit' class='btn quotation-btn'>Quote</button>
                           </form>
                           </td>
