@@ -1,14 +1,12 @@
 <?php
 
 session_start();
-echo "Session email: " . $_SESSION['email'];
 include("config.php");
 
 
 if(!isset($_SESSION['email'])){
     header("Location: index.php");
 }
-
 
 ?>
 <!DOCTYPE html>
