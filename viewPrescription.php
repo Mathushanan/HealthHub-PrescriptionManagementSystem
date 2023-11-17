@@ -2,7 +2,6 @@
 
 session_start();
 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,13 +35,35 @@ session_start();
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Mathushanan</td>
-                        <td>Mathushanan</td>
-                        <td>Mathushanan</td>
-                        <td>Mathushanan</td>
-                        <td><a href="logout.php"><button class="btn quotation-btn">Quote</button></a></td>
-                    </tr>
+                    <?php
+
+                    include("config.php");
+                    $result=mysqli_query($connection,"SELECT * FROM prescriptions");
+
+                    while($row=$result->fetch_assoc()){
+
+                        echo "
+
+                        <tr>
+                          <td>$row[name]</td>
+                          <td>$row[note]</td>
+                          <td>$row[deliveryAddress]</td>
+                          <td>$row[deliveryTime]</td>
+                          <td>
+                          <form method='post' action='prepareQuotation.php'>
+                          <input type='hidden' name='userId' value='$row[email]' />
+                          <button type='submit' class='btn quotation-btn'>Quote</button>
+                          </form>
+                          </td>
+                        </tr>
+                        
+                        ";
+
+                    }
+
+
+                    ?>
+                    
                 </tbody>
             </table>
         </div>

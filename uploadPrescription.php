@@ -41,10 +41,11 @@ if (!isset($_SESSION['email'])) {
                 $deliveryAddress = mysqli_real_escape_string($connection, $_POST['deliveryAddress']);
                 $deliveryTime = mysqli_real_escape_string($connection, $_POST['deliveryTime']);
                 $email = $_SESSION['email'];
+                $name=$_SESSION['name'];
 
-                $insertQuery = "INSERT INTO prescriptions (email,deliveryAddress,note,deliveryTime) VALUES (?,?,?,?)";
+                $insertQuery = "INSERT INTO prescriptions (name,email,deliveryAddress,note,deliveryTime) VALUES (?,?,?,?,?)";
                 $statement1 = $connection->prepare($insertQuery);
-                $statement1->bind_param("ssss", $email, $deliveryAddress, $note, $deliveryTime);
+                $statement1->bind_param("sssss", $name,$email, $deliveryAddress, $note, $deliveryTime);
               
                 
                if ($statement1->execute()) {
