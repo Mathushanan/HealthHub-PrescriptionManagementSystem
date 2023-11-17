@@ -4,19 +4,21 @@ session_start();
 include("config.php");
 
 
-if(!isset($_SESSION['email'])){
+if (!isset($_SESSION['email'])) {
     header("Location: index.php");
 }
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealthHub</title>
     <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
 </head>
+
 <body>
     <div class="nav">
         <div class="logo">
@@ -30,18 +32,57 @@ if(!isset($_SESSION['email'])){
         <div class="box form-box register-box">
             <?php
 
-            if(isset($_POST["submit"])){
+            if (isset($_POST["submit"])) {
 
-                $note=mysqli_real_escape_string($connection,$_POST['note']);
-                $deliveryAddress=mysqli_real_escape_string($connection,$_POST['deliveryAddress']);
-                $deliveryTime=mysqli_real_escape_string($connection,$_POST['deliveryTime']);
-                $email=$_SESSION['email'];
+                $isStatement1Success = false;
+                $isStatement2Success = false;
+
+                $note = mysqli_real_escape_string($connection, $_POST['note']);
+                $deliveryAddress = mysqli_real_escape_string($connection, $_POST['deliveryAddress']);
+                $deliveryTime = mysqli_real_escape_string($connection, $_POST['deliveryTime']);
+                $email = $_SESSION['email'];
+
+                $insertQuery = "INSERT INTO prescriptions (email,deliveryAddress,note,deliveryTime) VALUES (?,?,?,?)";
+                $statement1 = $connection->prepare($insertQuery);
+                $statement1->bind_param("ssss", $email, $deliveryAddress, $note, $deliveryTime);
+              
                 
-                $insertQuery="INSERT INTO prescriptions (email,deliveryAddress,note,deliveryTime) VALUES (?,?,?,?)";
-                $statement=$connection->prepare($insertQuery);
-                $statement->bind_param("ssss",$email,$deliveryAddress,$note,$deliveryTime);
+               if ($statement1->execute()) {
+                    $isStatement1Success = true;
 
-                if($statement->execute()){
+                    $selectQuery = "SELECT prescriptionId FROM prescriptions WHERE email=? ORDER BY prescriptionId DESC LIMIT 1";
+                    $selectStatement = $connection->prepare($selectQuery);
+                    $selectStatement->bind_param("s", $email);
+
+                    $selectStatement->execute();
+                    $selectStatement->bind_result($prescriptionId);
+                    $selectStatement->fetch();
+                    $selectStatement->close();
+
+                    $file = $_FILES['images'];
+
+                    foreach ($file['tmp_name'] as $key => $tmp_name) {
+
+                        $fileError = $file['error'][$key];
+                        $fileTmpName = $tmp_name;
+
+                        if ($fileError == 0) {
+
+                            $imageData = file_get_contents($fileTmpName);
+
+                            $insertImageQuery = "INSERT INTO images (prescriptionId,image) VALUES (?,?)";
+                            $statement2 = $connection->prepare($insertImageQuery);
+                            $statement2->bind_param("is", $prescriptionId, $imageData);
+
+                            if ($statement2->execute()) {
+                                $isStatement2Success = true;
+                            }
+                        }
+                    }
+               }
+
+
+                if ($isStatement1Success && $isStatement1Success) {
                     echo "
                         <div class='SuccessMessageBox'>
                             <p>Prescription uploaded successfully!</p>
@@ -49,7 +90,7 @@ if(!isset($_SESSION['email'])){
                     echo "
                         <a href='uploadPrescription.php'><button class='btn'>GO BACK</button></a>
                     ";
-                }else{
+                } else {
                     echo "
                         <div class='ErrorMessageBox'>
                              <p>Failed to upload the prescription!</p>
@@ -58,48 +99,49 @@ if(!isset($_SESSION['email'])){
                         <a href='uploadPrescriptions.php'><button class='btn'>GO BACK</button></a>
                     ";
                 }
-            }else{
+            } else {
 
-            
+
 
 
             ?>
-            <header>Upload Prescription</header>
-            <form action="" method="post">
-                <div class="field input">
-                    <label for="fileUpload">Prescription Images</label>
-                    <input type="file" class="fileUpload" id="fileUpload" name="image" accept=".jpg, .jpeg, .png" multiple>
-                </div>
-                <div class="field input">
-                    <label for="note">Note</label>
-                    <textarea id="note" name="note" rows="4" cols="50"></textarea>
-                </div>
-                <div class="field input">
-                    <label for="deliveryAddress">Delivery Address</label>
-                    <input type="text" name="deliveryAddress" id="deliveryAddress" required>
-                </div>
-                <div class="field input">
-                    <label for="deliveryTime">Delivery Time</label>
-                    <select id="deliveryTime" name="deliveryTime">
-                        <option value="8-10AM">8:00 AM - 10:00 AM</option>
-                        <option value="10-12PM">10:00 AM - 12:00 PM</option>
-                        <option value="12-2PM">12:00 PM - 2:00 PM</option>
-                        <option value="2-4PM">2:00 PM - 4:00 PM</option>
-                        <option value="4-6PM">4:00 PM - 6:00 PM</option>
-                        <option value="6-8PM">6:00 AM - 8:00 PM</option>
-                        <option value="8-10PM">8:00 AM - 10:00 PM</option>
-                        <option value="10-12PM">10:00 PM - 12:00 PM</option>
-                    </select>
-                </div>
-              
-                <div class="field">
-                    <input type="submit" class="btn" name="submit" value="UPLOAD">
-                </div>
-            </form>
+                <header>Upload Prescription</header>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="field input">
+                        <label for="fileUpload">Prescription Images</label>
+                        <input type="file" class="fileUpload" id="fileUpload" name="images[]" accept="image/*" multiple required>
+                    </div>
+                    <div class="field input">
+                        <label for="note">Note</label>
+                        <textarea id="note" name="note" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="field input">
+                        <label for="deliveryAddress">Delivery Address</label>
+                        <input type="text" name="deliveryAddress" id="deliveryAddress" required>
+                    </div>
+                    <div class="field input">
+                        <label for="deliveryTime">Delivery Time</label>
+                        <select id="deliveryTime" name="deliveryTime">
+                            <option value="8-10AM">8:00 AM - 10:00 AM</option>
+                            <option value="10-12PM">10:00 AM - 12:00 PM</option>
+                            <option value="12-2PM">12:00 PM - 2:00 PM</option>
+                            <option value="2-4PM">2:00 PM - 4:00 PM</option>
+                            <option value="4-6PM">4:00 PM - 6:00 PM</option>
+                            <option value="6-8PM">6:00 AM - 8:00 PM</option>
+                            <option value="8-10PM">8:00 AM - 10:00 PM</option>
+                            <option value="10-12PM">10:00 PM - 12:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <input type="submit" class="btn" name="submit" value="UPLOAD">
+                    </div>
+                </form>
         </div>
-        <?php } ?>
+    <?php } ?>
     </div>
-    
-    
+
+
 </body>
+
 </html>
