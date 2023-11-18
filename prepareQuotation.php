@@ -1,6 +1,9 @@
 <?php
 
 session_start();
+if (!isset($_SESSION['email'])) {
+    header("Location:index.php");
+}
 
 ?>
 
@@ -20,7 +23,9 @@ session_start();
             <p>Health<span class="sub-logo">Hub</span></p>
         </div>
         <div class="right-links">
+            <a href="viewPrescription.php"><button class="btn back-btn">GO BACK</button></a>
             <a href="logout.php"><button class="btn">LOGOUT</button></a>
+
         </div>
     </div>
     <?php
@@ -34,8 +39,11 @@ session_start();
 
     ?>
 
+
     <div class="container viewContainer">
+
         <div class="box view-box">
+
             <div class="image-viewer">
                 <?php
 
@@ -44,8 +52,6 @@ session_start();
                 $bigImageData = base64_encode($bigImage);
 
                 echo '<img src="data:image/jpeg;base64,' . $bigImageData . '" alt="Thumbnail 1"  id="big-image" >';
-
-
                 ?>
 
                 <div id="small-image-container">
@@ -56,9 +62,9 @@ session_start();
                         $image = $row['image'];
                         $imageData = base64_encode($image);
                         $src = "data:image/jpeg;base64," . $imageData;
-                        $borderStyle='';
-                        if($count==1){
-                            $borderStyle='border: 3px solid #4285f4;';
+                        $borderStyle = '';
+                        if ($count == 1) {
+                            $borderStyle = 'border: 3px solid #4285f4;';
                         }
                         $imageId = "image" . $count;
 
@@ -67,35 +73,60 @@ session_start();
                         $count++;
                     }
                     ?>
-
-
-
-
                 </div>
 
             </div>
             <div id="invoice-container">
-                <h2>Invoice</h2>
+                <div class="products">
+                    <table id="product-table">
+                        <thead>
+                            <tr>
+                                <th>Drug</th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list">
 
-                <ul id="product-list">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="total">Total</td>
+                                <td id="total" class="total">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
 
-                </ul>
 
-                <div class="field input">
-                    <label for="productName">Product Name:</label>
-                    <input type="text" id="productName">
                 </div>
-                <div class="field input">
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity">
+
+                <div class="add-products">
+                    <div class="field input">
+                        <label for="productName">Drug</label>
+                        <input type="text" id="productName">
+                    </div>
+                    <div class="field input">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity">
+                    </div>
+                    <div class="field input">
+                        <label for="price">Amount</label>
+                        <input type="number" id="price">
+                    </div>
+                    <div class="field">
+                        <button onclick="addProduct()" class="btn">ADD PRODUCT</button>
+                    </div>
+
                 </div>
-                <div class="field input">
-                    <label for="price">Price:</label>
-                    <input type="number" id="price">
+                <div class="submit-quotation">
+                    <div class="field">
+                        <button onclick="" class="btn send-btn">SEND QUOTATION</button>
+                    </div>
+
                 </div>
-                <div class="field">
-                    <button onclick="addProduct()" class="btn">Add Product</button>
-                </div>
+
+
+
 
             </div>
 
@@ -116,20 +147,31 @@ session_start();
         }
 
         function addProduct() {
+
             var productName = document.getElementById('productName').value;
             var quantity = document.getElementById('quantity').value;
             var price = document.getElementById('price').value;
 
             if (productName && quantity && price) {
                 var productList = document.getElementById('product-list');
+                var totalElement = document.getElementById('total');
 
-                var listItem = document.createElement('li');
-                listItem.className = 'product-item';
-                listItem.innerHTML = `<strong>${productName}</strong> - Quantity: ${quantity}, Price: ${price}`;
 
-                productList.appendChild(listItem);
+                var newRow = productList.insertRow();
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
 
-                // Clear input fields after adding the product
+
+                cell1.innerHTML = productName;
+                cell2.innerHTML = quantity + " x " + parseFloat(price);
+                cell3.innerHTML = quantity * price;
+
+
+                var currentTotal = parseFloat(totalElement.innerHTML);
+                var subtotal = parseFloat(quantity) * parseFloat(price);
+                totalElement.innerHTML = (currentTotal + subtotal).toFixed(2);
+
                 document.getElementById('productName').value = '';
                 document.getElementById('quantity').value = '';
                 document.getElementById('price').value = '';
