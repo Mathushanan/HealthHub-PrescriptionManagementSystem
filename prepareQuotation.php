@@ -23,25 +23,63 @@ session_start();
             <a href="logout.php"><button class="btn">LOGOUT</button></a>
         </div>
     </div>
-    
+    <?php
+
+    include("config.php");
+    $prescriptionId = $_POST['prescriptionId'];
+
+    $selectQuery = "SELECT image FROM images WHERE prescriptionId='$prescriptionId'";
+    $big_result = $connection->query($selectQuery);
+    $small_result = $connection->query($selectQuery);
+
+    ?>
+
     <div class="container viewContainer">
         <div class="box view-box">
             <div class="image-viewer">
-                <img id="big-image" src="img1.jpeg" alt="Big Image">
+                <?php
 
-                <div id="image-container">
-                    <img src="img1.jpeg" alt="Thumbnail 1" class="thumbnail" onclick="showImage('img1.jpeg')">
-                    <img src="img2.jpeg" alt="Thumbnail 2" class="thumbnail" onclick="showImage('img2.jpeg')">
-                    <img src="img3.jpeg" alt="Thumbnail 3" class="thumbnail" onclick="showImage('img3.jpeg')">
-                    <img src="img4.jpeg" alt="Thumbnail 4" class="thumbnail" onclick="showImage('img4.jpeg')">
-                    <img src="img5.jpeg" alt="Thumbnail 5" class="thumbnail" onclick="showImage('img5.jpeg')">
+                $row = $big_result->fetch_assoc();
+                $bigImage = $row['image'];
+                $bigImageData = base64_encode($bigImage);
+
+                echo '<img src="data:image/jpeg;base64,' . $bigImageData . '" alt="Thumbnail 1"  id="big-image" >';
+
+
+                ?>
+
+                <div id="small-image-container">
+                    <?php
+                    $count = 1;
+                    while ($row = $small_result->fetch_assoc()) {
+
+                        $image = $row['image'];
+                        $imageData = base64_encode($image);
+                        $src = "data:image/jpeg;base64," . $imageData;
+                        $borderStyle='';
+                        if($count==1){
+                            $borderStyle='border: 3px solid #4285f4;';
+                        }
+                        $imageId = "image" . $count;
+
+                        echo "<img src='$src' alt='Thumbnail' class='small-images' id='$imageId'onclick='showImage(\"$src\",\"$imageId\")' style='$borderStyle'>";
+
+                        $count++;
+                    }
+                    ?>
+
+
+
+
                 </div>
 
             </div>
             <div id="invoice-container">
                 <h2>Invoice</h2>
 
-                <ul id="product-list"></ul>
+                <ul id="product-list">
+
+                </ul>
 
                 <div class="field input">
                     <label for="productName">Product Name:</label>
@@ -66,8 +104,15 @@ session_start();
 
 
     <script>
-        function showImage(image) {
+        function showImage(image, imageId) {
             document.getElementById('big-image').src = image;
+            var allImages = document.getElementsByClassName('small-images');
+            for (image of allImages) {
+                image.style.border = 'none';
+            }
+            document.getElementById(imageId).style.border = '3px solid #4285f4';
+
+
         }
 
         function addProduct() {
