@@ -14,6 +14,7 @@ if (!isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealthHub</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
 </head>
 
@@ -76,59 +77,63 @@ if (!isset($_SESSION['email'])) {
                 </div>
 
             </div>
-            <div id="invoice-container">
-                <div class="products">
-                    <table id="product-table">
-                        <thead>
-                            <tr>
-                                <th>Drug</th>
-                                <th>Quantity</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-list">
+            <form action="sendQuotation.php" method="post" id="invoice-form">
+                <div id="invoice-container">
+                    <div class="products">
+                        <table id="product-table">
+                            <thead>
+                                <tr>
+                                    <th>Drug</th>
+                                    <th>Quantity</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-list">
 
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2" class="total">Total</td>
-                                <td id="total" class="total">0.00</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" class="total">Total</td>
+                                    <td id="total" class="total">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+
+                    </div>
+
+                    <div class="add-products">
+                        <div class="field input">
+                            <label for="productName">Drug</label>
+                            <input type="text" id="productName">
+                        </div>
+                        <div class="field input">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity">
+                        </div>
+                        <div class="field input">
+                            <label for="price">Amount</label>
+                            <input type="number" id="price">
+                        </div>
+                        <div class="field">
+                            <button onclick="addProduct()" class="btn" type="button">ADD PRODUCT</button>
+                        </div>
+
+                    </div>
+                    <div class="submit-quotation">
+                        <div class="field">
+                            <button type="button" class="btn send-btn" onclick="sendQuotation()">SEND QUOTATION</button>
+                        </div>
+
+                    </div>
+
+
 
 
                 </div>
 
-                <div class="add-products">
-                    <div class="field input">
-                        <label for="productName">Drug</label>
-                        <input type="text" id="productName">
-                    </div>
-                    <div class="field input">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" id="quantity">
-                    </div>
-                    <div class="field input">
-                        <label for="price">Amount</label>
-                        <input type="number" id="price">
-                    </div>
-                    <div class="field">
-                        <button onclick="addProduct()" class="btn">ADD PRODUCT</button>
-                    </div>
+            </form>
 
-                </div>
-                <div class="submit-quotation">
-                    <div class="field">
-                        <button onclick="" class="btn send-btn">SEND QUOTATION</button>
-                    </div>
-
-                </div>
-
-
-
-
-            </div>
 
         </div>
     </div>
@@ -179,6 +184,30 @@ if (!isset($_SESSION['email'])) {
                 alert('Please fill in all fields.');
             }
         }
+
+        var sendQuotation = () => {
+            console.log("called!");
+            var data = [];
+
+           
+            $("#product-list tr").each(function() {
+                var row = {};
+                row.drug = $(this).find("td:eq(0)").text();
+                row.quantity = $(this).find("td:eq(1)").text();
+                row.amount = $(this).find("td:eq(2)").text();
+                data.push(row);
+            });
+
+            console.log(data);
+
+            $("#invoice-form").append('<input type="hidden" name="data" value="' + JSON.stringify(data) + '">');
+
+         
+            $("#invoice-form").submit();
+
+
+        };
+       
     </script>
 
 </body>
