@@ -4,7 +4,8 @@ session_start();
 if (!isset($_SESSION['email'])) {
     header("Location:logout.php");
 }
-
+$prescriptionId = $_POST['prescriptionId'];
+$_SESSION['prescriptionId']=$prescriptionId;
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +33,7 @@ if (!isset($_SESSION['email'])) {
     <?php
 
     include("config.php");
-    $prescriptionId = $_POST['prescriptionId'];
+   
 
     $selectQuery = "SELECT image FROM images WHERE prescriptionId='$prescriptionId'";
     $big_result = $connection->query($selectQuery);
@@ -123,7 +124,7 @@ if (!isset($_SESSION['email'])) {
                     </div>
 
                     <input type="hidden" name="tableData" id="tableData">
-                    <input type="hidden" name="prescriptionData" value="<?php echo $prescriptionId; ?>">
+                    
                    
                     
                     <div class="submit-quotation">
