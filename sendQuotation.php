@@ -2,25 +2,23 @@
 
 session_start();
 if (!isset($_SESSION['email'])) {
-    header("Location:index.php");
-}
+    header("Location:logout.php");
+} else {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+        $receivedData = isset($_POST['tableData']) ? $_POST['tableData'] : null;
+        $decodedData = json_decode($receivedData, true);
+        $prescriptionId = $_POST['prescriptionData'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $receivedData = isset($_POST['tableData']) ? $_POST['tableData'] : null;
-
-    $decodedData = json_decode($receivedData, true);
-
-
-
-    foreach ($decodedData as $drugInfo) {
-        $drug = $drugInfo['drug'];
-        $quantity = $drugInfo['quantity'];
-        $amount = $drugInfo['amount'];
+        $total = 0.00;
+        foreach ($decodedData as $drugInfo) {
+            $total += $drugInfo['amount'];
+        }
     }
-    $prescriptionId=$_POST['prescriptionData'];
 }
+
+
+
 
 ?>
 
@@ -40,27 +38,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="logo">
             <p>Health<span class="sub-logo">Hub</span></p>
         </div>
-        <div class="right-links">
-            <?php
-            echo "
+
+        <?php
+        echo "
+            <div class='right-links sendQuotation-links'>
             <form method='post' action='prepareQuotation.php'>
                 <input type='hidden' name='prescriptionId' value='$prescriptionId' />
                 <a href='prepareQuotation.php'><button class='btn back-btn'>GO BACK</button></a>
-                <a href='logout.php'><button class='btn'>LOGOUT</button></a>
             </form>
+            <a href='logout.php'><button class='btn'>LOGOUT</button></a>
+            </div>
             ";
+        ?>
+
+    </div>
+    <div class="container">
+        <div class="box form-box">
+            <?php
+
+            include("config.php");
+
+
+
+            $insertQuery_Quotation = "INSERT INTO quotations (prescriptionId,seen,total) VALUES (?,?,?)";
+            $statement1 = $connection->prepare($insertQuery_Quotation);
+            $seen="No";
+            $statement1->bind_param("isd", $prescriptionId, $seen, $total);
+
+            if ($statement1->execute()) {
+                echo "
+                        <div class='SuccessMessageBox'>
+                            <p>Prescription uploaded successfully!</p>
+                        <div><br>";
+                echo "
+                        <a href='uploadPrescription.php'><button class='btn'>GO BACK</button></a>
+                    ";
+            } else {
+                echo "
+                        <div class='ErrorMessageBox'>
+                             <p>Failed to upload the prescription!</p>
+                        <div><br>";
+                echo "
+                        <a href='uploadPrescriptions.php'><button class='btn'>GO BACK</button></a>
+                    ";
+            }
+
+
+            foreach ($decodedData as $drugInfo) {
+                $drug = $drugInfo['drug'];
+                $quantity = $drugInfo['quantity'];
+                $amount = $drugInfo['amount'];
+            }
+
+
+
+
+
             ?>
-            
+
+
+
 
         </div>
+
     </div>
-    <?php
 
 
-
-
-
-    ?>
 </body>
 
 </html>

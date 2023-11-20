@@ -20,6 +20,7 @@ body{
 .right-links a{
     padding: 0 10px;
 }
+
 .sub-logo{
     color: #4285f4;
 }
@@ -213,7 +214,6 @@ tr:hover {
 }
 
 
-
 #big-image {
     max-width: 380px;
     max-height: 400px; 
@@ -299,7 +299,10 @@ tr:hover {
 }
 
 
-
+/*sendQuotaion.php*/
+.sendQuotation-links {
+    display: flex;
+}
 
 
 

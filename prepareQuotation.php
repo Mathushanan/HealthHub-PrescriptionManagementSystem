@@ -2,7 +2,7 @@
 
 session_start();
 if (!isset($_SESSION['email'])) {
-    header("Location:index.php");
+    header("Location:logout.php");
 }
 
 ?>
@@ -124,6 +124,7 @@ if (!isset($_SESSION['email'])) {
 
                     <input type="hidden" name="tableData" id="tableData">
                     <input type="hidden" name="prescriptionData" value="<?php echo $prescriptionId; ?>">
+                   
                     
                     <div class="submit-quotation">
                         <div class="field">
@@ -204,10 +205,11 @@ if (!isset($_SESSION['email'])) {
                 };
                 tableData.push(rowData);
             }
-
-
+            
             document.getElementById("tableData").value = JSON.stringify(tableData);
+           
         }
+      
     </script>
 
 </body>
