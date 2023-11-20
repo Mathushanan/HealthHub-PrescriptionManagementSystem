@@ -77,10 +77,11 @@ if (!isset($_SESSION['email'])) {
                 </div>
 
             </div>
-            <form action="sendQuotation.php" method="post" id="invoice-form">
-                <div id="invoice-container">
+
+            <div id="invoice-container">
+                <form method="post" action="sendQuotation.php" onsubmit="prepareFormData()">
                     <div class="products">
-                        <table id="product-table">
+                        <table id="data-table">
                             <thead>
                                 <tr>
                                     <th>Drug</th>
@@ -120,19 +121,24 @@ if (!isset($_SESSION['email'])) {
                         </div>
 
                     </div>
+
+                    <input type="hidden" name="tableData" id="tableData">
+                    <input type="hidden" name="prescriptionData" value="<?php echo $prescriptionId; ?>">
+                    
                     <div class="submit-quotation">
                         <div class="field">
-                            <button type="button" class="btn send-btn" onclick="sendQuotation()">SEND QUOTATION</button>
+                            <button class="btn send-btn" type="submit">SEND QUOTATION</button>
                         </div>
 
                     </div>
+                </form>
 
 
 
 
-                </div>
+            </div>
 
-            </form>
+
 
 
         </div>
@@ -185,29 +191,23 @@ if (!isset($_SESSION['email'])) {
             }
         }
 
-        var sendQuotation = () => {
-            console.log("called!");
-            var data = [];
+        function prepareFormData() {
 
-           
-            $("#product-list tr").each(function() {
-                var row = {};
-                row.drug = $(this).find("td:eq(0)").text();
-                row.quantity = $(this).find("td:eq(1)").text();
-                row.amount = $(this).find("td:eq(2)").text();
-                data.push(row);
-            });
-
-            console.log(data);
-
-            $("#invoice-form").append('<input type="hidden" name="data" value="' + JSON.stringify(data) + '">');
-
-         
-            $("#invoice-form").submit();
+            let tableData = [];
+            let rows = document.getElementById("product-list").getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                let rowData = {
+                    drug: cells[0].innerText,
+                    quantity: cells[1].innerText,
+                    amount: cells[2].innerText
+                };
+                tableData.push(rowData);
+            }
 
 
-        };
-       
+            document.getElementById("tableData").value = JSON.stringify(tableData);
+        }
     </script>
 
 </body>
