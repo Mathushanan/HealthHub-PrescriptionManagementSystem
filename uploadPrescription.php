@@ -25,7 +25,9 @@ if (!isset($_SESSION['email'])) {
             <p>Health<span class="sub-logo">Hub</span></p>
         </div>
         <div class="right-links">
+            <a href="viewAllQuotations.php"><button class="btn back-btn">RECEIVED QUOTATIONS</button></a>
             <a href="logout.php"><button class="btn">LOGOUT</button></a>
+
         </div>
     </div>
     <div class="container">

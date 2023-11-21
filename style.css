@@ -280,15 +280,9 @@ tr:hover {
     flex-direction: column;
     padding: 10px 10px;
     margin-right: 10px;
-
    width:400px;
     
 }
-
-
-
-
-
 
 #invoice-container {
     width: 400px;
@@ -312,8 +306,6 @@ tr:hover {
     color: #f44336;
 }
 
-
-
 #invoice-container .field{
     display: flex;
     margin-bottom: 10px;
@@ -333,10 +325,45 @@ tr:hover {
     border :1px solid;
 }
 
-
 /*sendQuotaion.php*/
 .sendQuotation-links {
     display: flex;
+}
+/*viewAllQuotations.php*/
+
+.accept-btn{
+    background-color: #4CAF50;
+    opacity: 1;
+    width: 70px;
+
+}
+.reject-btn{
+    background-color: #f44336;
+    opacity: 1;
+    width: 70px;
+}
+
+
+
+
+/*viewOneQuotation.php*/
+.invoice {
+    width: 100%;
+    margin: auto;
+    border: 1px solid #ddd;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.total {
+    margin-top: 20px;
+    text-align: right;
+    font-weight: bold;
 }
 
 
