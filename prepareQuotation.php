@@ -5,7 +5,7 @@ if (!isset($_SESSION['email'])) {
     header("Location:logout.php");
 }
 $prescriptionId = $_POST['prescriptionId'];
-$_SESSION['prescriptionId']=$prescriptionId;
+$_SESSION['prescriptionId'] = $prescriptionId;
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ $_SESSION['prescriptionId']=$prescriptionId;
     <?php
 
     include("config.php");
-   
+
 
     $selectQuery = "SELECT image FROM images WHERE prescriptionId='$prescriptionId'";
     $big_result = $connection->query($selectQuery);
@@ -48,31 +48,36 @@ $_SESSION['prescriptionId']=$prescriptionId;
 
             <div class="image-viewer">
                 <?php
+                if ($big_result->num_rows > 0) {
+                    $row = $big_result->fetch_assoc();
+                    $bigImage = $row['image'];
+                    $bigImageData = base64_encode($bigImage);
 
-                $row = $big_result->fetch_assoc();
-                $bigImage = $row['image'];
-                $bigImageData = base64_encode($bigImage);
+                    echo '<img src="data:image/jpeg;base64,' . $bigImageData . '" alt="Thumbnail 1"  id="big-image" >';
+                }
 
-                echo '<img src="data:image/jpeg;base64,' . $bigImageData . '" alt="Thumbnail 1"  id="big-image" >';
+
                 ?>
 
                 <div id="small-image-container">
                     <?php
-                    $count = 1;
-                    while ($row = $small_result->fetch_assoc()) {
+                    if ($small_result->num_rows > 0) {
+                        $count = 1;
+                        while ($row = $small_result->fetch_assoc()) {
 
-                        $image = $row['image'];
-                        $imageData = base64_encode($image);
-                        $src = "data:image/jpeg;base64," . $imageData;
-                        $borderStyle = '';
-                        if ($count == 1) {
-                            $borderStyle = 'border: 3px solid #4285f4;';
+                            $image = $row['image'];
+                            $imageData = base64_encode($image);
+                            $src = "data:image/jpeg;base64," . $imageData;
+                            $borderStyle = '';
+                            if ($count == 1) {
+                                $borderStyle = 'border: 3px solid #4285f4;';
+                            }
+                            $imageId = "image" . $count;
+
+                            echo "<img src='$src' alt='Thumbnail' class='small-images' id='$imageId'onclick='showImage(\"$src\",\"$imageId\")' style='$borderStyle'>";
+
+                            $count++;
                         }
-                        $imageId = "image" . $count;
-
-                        echo "<img src='$src' alt='Thumbnail' class='small-images' id='$imageId'onclick='showImage(\"$src\",\"$imageId\")' style='$borderStyle'>";
-
-                        $count++;
                     }
                     ?>
                 </div>
@@ -124,9 +129,9 @@ $_SESSION['prescriptionId']=$prescriptionId;
                     </div>
 
                     <input type="hidden" name="tableData" id="tableData">
-                    
-                   
-                    
+
+
+
                     <div class="submit-quotation">
                         <div class="field">
                             <button class="btn send-btn" type="submit">SEND QUOTATION</button>
@@ -206,11 +211,10 @@ $_SESSION['prescriptionId']=$prescriptionId;
                 };
                 tableData.push(rowData);
             }
-            
+
             document.getElementById("tableData").value = JSON.stringify(tableData);
-           
+
         }
-      
     </script>
 
 </body>

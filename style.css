@@ -201,7 +201,42 @@ tr:hover {
 .quotation-btn {
     display: inline-block;
     margin: 0;
+    opacity: 0.5;
+    width: 80px;
 }
+.quotation-btn:hover{
+  
+    opacity: 0.5;
+  
+}
+.not-quoted{
+    opacity: 1;
+    width: 80px;
+}
+
+.pending{
+    padding: 4px 6px; /* Adjust padding as needed */
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px;
+    color: #FFD700;
+    width:100px;
+}
+.rejected{
+    padding: 4px 6px; /* Adjust padding as needed */
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px;
+    color: #FF0000;
+}
+.accepted{
+    padding: 4px 6px; /* Adjust padding as needed */
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px;
+    color: #008000;
+}
+
 
 /*prepareQuotation.php*/
 

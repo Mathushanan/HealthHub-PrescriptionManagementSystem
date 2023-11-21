@@ -79,10 +79,10 @@ if (!isset($_SESSION['email'])) {
                 </form>
                     ";
             } else {
-                $insertQuery_Quotation = "INSERT INTO quotations (prescriptionId,seen,total) VALUES (?,?,?)";
+                $insertQuery_Quotation = "INSERT INTO quotations (prescriptionId,total,status) VALUES (?,?,?)";
                 $statement1 = $connection->prepare($insertQuery_Quotation);
-                $seen = "No";
-                $statement1->bind_param("isd", $prescriptionId, $seen, $total);
+                $status = "Pending";
+                $statement1->bind_param("ids", $prescriptionId,$total,$status);
 
                 $isQuotationSuccess = false;
                 $isQuotationDetailsSuccess = true;
@@ -115,6 +115,26 @@ if (!isset($_SESSION['email'])) {
                 }
 
                 if ($isQuotationSuccess && $isQuotationDetailsSuccess) {
+
+                   /* $selectMailQuery = "SELECT email FROM prescriptions WHERE prescriptionId=?";
+                    $selectMailStatement = $connection->prepare($selectMailQuery);
+                    $selectMailStatement->bind_param("i", $prescriptionId);
+
+                    if ($selectMailStatement->execute()) {
+                        $selectMailStatement->bind_result($userEmail);
+                        $selectMailStatement->fetch();
+                        $selectMailStatement->close();
+                    }
+
+                    $to="posttoday0@gmail.com";
+                    $subject="Quotation From HealthHub";
+                    $message = "Dear Customer,\n\nYour have received your quotation from HealthHub.\n\nCheck it out.\n\nThank you for choosing HealthHub!";
+                    $headers = "From: webmaster@example.com";
+
+                    mail($to, $subject, $message, $headers);
+                    */
+
+
                     echo "
                             <div class='SuccessMessageBox'>
                                 <p>Quotation has been submitted!</p>
