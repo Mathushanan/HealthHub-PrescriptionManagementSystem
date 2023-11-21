@@ -64,6 +64,11 @@ if (!isset($_SESSION['email'])) {
                                             <td>$row[deliveryTime]</td>
                                             <td><span class='accepted'>$Row[status]</span></td>
                                             <td>
+                                            <form method='post' action='viewOneQuotation.php' id='form'>
+                                            <input type='hidden' name='prescriptionId' value='$row[prescriptionId]'  />
+                                            <button type='submit' class='btn view-btn' >VIEW</button>
+                                           
+                                             </form>
                                         
                                                 
                                             </td>
@@ -79,6 +84,11 @@ if (!isset($_SESSION['email'])) {
                                             <td>$row[deliveryTime]</td>
                                             <td><span class='rejected'>$Row[status]</span></td>
                                             <td>
+                                            <form method='post' action='viewOneQuotation.php' id='form'>
+                                            <input type='hidden' name='prescriptionId' value='$row[prescriptionId]'  />
+                                            <button type='submit' class='btn view-btn' >VIEW</button>
+                                           
+                                             </form>
 
                               
                                             </td>
@@ -87,6 +97,7 @@ if (!isset($_SESSION['email'])) {
                             
                                     ";
                                     } else if ($status == "Pending") {
+
                                         echo "
                                         <tr>
 
@@ -95,12 +106,11 @@ if (!isset($_SESSION['email'])) {
                                             <td>$row[deliveryTime]</td>
                                             <td><span class='pending'>$Row[status]</span></td>
                                             <td>
-                                                <form method='post' action='updateStatusOfQuotation.php' id='updateStatusForm'>
-                                                    <input type='hidden' name='prescriptionId' value='$row[prescriptionId]' />
-                                                    <input type='hidden' id='status' name='status'  />
-                                                    <button type='button' class='btn quotation-btn accept-btn' onclick=\"updateStatus('accept')\">Accept</button>
-                                                    <button type='button' class='btn quotation-btn reject-btn'onclick=\"updateStatus('reject')\">Reject</button>
-                                                </form>
+                                            <form method='post' action='viewOneQuotation.php' id='form'>
+                                            <input type='hidden' name='prescriptionId' value='$row[prescriptionId]'  />
+                                            <button type='submit' class='btn view-btn' >VIEW</button>
+                                           
+                                             </form>
                                             </td>
                                             
                                         </tr>
@@ -123,10 +133,6 @@ if (!isset($_SESSION['email'])) {
         </div>
     </div>
     <script>
-        var updateStatus=(status)=>{
-                document.getElementById('status').value=status;
-                document.getElementById('updateStatusForm').submit();
-        }
 
     </script>
 </body>
