@@ -86,9 +86,10 @@ $prescriptionId = $_POST['prescriptionId'];
                 <form method='post' action='updateStatusOfQuotation.php'>
                     <input type='hidden' name='quotationId' value='<?php echo $quotationId ?>' />
                     <input type='hidden' name='status' id='status' value='' />
+                    <input type='hidden' name='prescriptionId' id='prescriptionId' value=<?php echo $prescriptionId ?> />
 
-                    <button type='submit' class='btn accept-btn' onclick='updateStatus("accept")'>ACCEPT</button>
-                    <button type='submit' class='btn reject-btn' onclick='updateStatus("reject")'>REJECT</button>
+                    <button type='submit' class='btn accept-btn' onclick='updateStatus("Accepted")'>ACCEPT</button>
+                    <button type='submit' class='btn reject-btn' onclick='updateStatus("Rejected")'>REJECT</button>
                 </form>
                 <div>
 
@@ -102,12 +103,9 @@ $prescriptionId = $_POST['prescriptionId'];
             </div>
 
             <script>
-
-                var updateStatus=(status)=>{
-                    document.getElementById('status').value=status;
+                var updateStatus = (status) => {
+                    document.getElementById('status').value = status;
                 }
-
-
             </script>
 </body>
 
