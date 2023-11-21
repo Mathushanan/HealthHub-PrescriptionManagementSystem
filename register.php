@@ -30,7 +30,7 @@
                 $address = $_POST['address'];
                 $dob = $_POST['dob'];
                 $password = $_POST['password'];
-                $type=$_POST['type'];
+                $type = $_POST['type'];
 
                 $verifyQuery = mysqli_query($connection, "SELECT * FROM users WHERE email='$email'");
 
@@ -57,9 +57,9 @@
 
             ?>
                 <header>Register</header>
-                <form action="" method="post">
+                <form action="" method="post" id="form">
                     <div class="field input">
-                       
+
                         <select id="type" name="type">
                             <option value="Parmacy User">Parmacy User</option>
                             <option value="Normal User">Normal User</option>
@@ -94,7 +94,7 @@
                         <input type="password" name="cpassword" id="cpassword" required>
                     </div>
                     <div class="field">
-                        <input type="submit" class="btn" name="submit" value="SIGNUP">
+                        <button type="submit" class="btn" name="submit" value="SIGNUP" >SIGNUP</button>
                     </div>
                     <div class="link">
                         Already have an Account? <a href="index.php">LOGIN</a>
@@ -103,6 +103,65 @@
         </div>
     <?php } ?>
     </div>
+
+    <script>
+        document.getElementById("form").onsubmit = function() {
+            return validateForm();
+        };
+        var validateForm = () => {
+
+  
+            let valid = true;
+            const nameInput = document.getElementById("name");
+            if (nameInput.value.trim() === "") {
+                valid = false;
+                alert("Name is required");
+            }
+
+            const emailInput = document.getElementById("email");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                valid = false;
+                alert("Invalid email address");
+            }
+
+            const mobileInput = document.getElementById("mobile");
+            const mobileRegex = /^[0-9]{10}$/;
+            if (!mobileRegex.test(mobileInput.value)) {
+                valid = false;
+                alert("Invalid mobile number");
+            }
+
+            const addressInput = document.getElementById("address");
+            if (addressInput.value.trim() === "") {
+                valid = false;
+                alert("Address is required");
+            }
+
+            const dobInput = document.getElementById("dob");
+            if (dobInput.value === "") {
+                valid = false;
+                alert("Date of Birth is required");
+            }
+
+            const passwordInput = document.getElementById("password");
+            const cpasswordInput = document.getElementById("cpassword");
+            if (passwordInput.value.length < 6) {
+                valid = false;
+                alert("Password must be at least 6 characters");
+            } else if (passwordInput.value !== cpasswordInput.value) {
+                valid = false;
+                alert("Passwords do not match");
+            }
+
+            if (valid) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+
 
 
 </body>

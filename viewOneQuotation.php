@@ -88,8 +88,30 @@ $prescriptionId = $_POST['prescriptionId'];
                     <input type='hidden' name='status' id='status' value='' />
                     <input type='hidden' name='prescriptionId' id='prescriptionId' value=<?php echo $prescriptionId ?> />
 
-                    <button type='submit' class='btn accept-btn' onclick='updateStatus("Accepted")'>ACCEPT</button>
-                    <button type='submit' class='btn reject-btn' onclick='updateStatus("Rejected")'>REJECT</button>
+                    <?php
+
+                    $query = "SELECT status FROM quotations WHERE quotationId='$quotationId'";
+                    $result3 = $connection->query($query);
+                    if ($result3) {
+
+                        $ROW = $result3->fetch_assoc();
+                        $checkStatus = $ROW['status'];
+                        $result3->close();
+                    }
+
+                    if ($checkStatus == "Pending") {
+                        echo "
+                        <button type='submit' class='btn accept-btn' onclick=\"updateStatus('Accepted')\">ACCEPT</button>
+                        <button type='submit' class='btn reject-btn' onclick=\"updateStatus('Rejected')\">REJECT</button>
+                        
+                        ";
+                    }
+
+
+
+                    ?>
+
+
                 </form>
                 <div>
 
