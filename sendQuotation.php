@@ -58,45 +58,19 @@ if (!isset($_SESSION['email'])) {
 
             include("config.php");
 
-            $insertQuery_Quotation = "INSERT INTO quotations (prescriptionId,seen,total) VALUES (?,?,?)";
-            $statement1 = $connection->prepare($insertQuery_Quotation);
-            $seen = "No";
-            $statement1->bind_param("isd", $prescriptionId, $seen, $total);
+            $checkQuery = "SELECT COUNT(*) FROM quotations WHERE prescriptionId=?";
+            $checkStatement = $connection->prepare($checkQuery);
+            $checkStatement->bind_param("i", $prescriptionId);
 
-            $isQuotationSuccess = false;
-            $isQuotationDetailsSuccess = true;
+            $checkStatement->execute();
+            $checkStatement->bind_result($count);
+            $checkStatement->fetch();
+            $checkStatement->close();
 
-            if ($statement1->execute()) {
-                $isQuotationSuccess = true;
-            }
-
-            $selectQuery = "SELECT quotationId FROM quotations WHERE prescriptionid=?";
-            $selectStatement = $connection->prepare($selectQuery);
-            $selectStatement->bind_param("i", $prescriptionId);
-            $selectStatement->execute();
-            $selectStatement->bind_result($quotationId);
-            $selectStatement->fetch();
-            $selectStatement->close();
-
-            foreach ($decodedData as $drugInfo) {
-                $drug = $drugInfo['drug'];
-                $quantity = $drugInfo['quantity'];
-                $amount = $drugInfo['amount'];
-
-                $insertQuery_QuotationDetails = "INSERT INTO quotationdetails (quotationId,drug,quantity,amount) VALUES (?,?,?,?)";
-                $statement2 = $connection->prepare($insertQuery_QuotationDetails);
-                $statement2->bind_param("isid", $quotationId, $drug, $quantity,$amount);
-
-                if(!$statement2->execute()){
-                    $isQuotationDetailsSuccess = false;
-                    break;
-                }
-            }
-
-            if ($isQuotationSuccess && $isQuotationDetailsSuccess) {
+            if ($count > 0) {
                 echo "
-                        <div class='SuccessMessageBox'>
-                            <p>Quotation has been submitted!</p>
+                        <div class='ErrorMessageBox'>
+                             <p>Quotation Aready submitted!</p>
                         <div><br>";
                 echo "
                 <form method='post' action='prepareQuotation.php'>
@@ -105,17 +79,68 @@ if (!isset($_SESSION['email'])) {
                 </form>
                     ";
             } else {
-                echo "
-                        <div class='ErrorMessageBox'>
-                             <p>Quotation submission failed!</p>
-                        <div><br>";
-                echo "
-                <form method='post' action='prepareQuotation.php'>
-                <input type='hidden' name='prescriptionId' value='$prescriptionId' />
-                <button type='submit' class='btn'>GO BACK</button>
-                </form>
-                    ";
+                $insertQuery_Quotation = "INSERT INTO quotations (prescriptionId,seen,total) VALUES (?,?,?)";
+                $statement1 = $connection->prepare($insertQuery_Quotation);
+                $seen = "No";
+                $statement1->bind_param("isd", $prescriptionId, $seen, $total);
+
+                $isQuotationSuccess = false;
+                $isQuotationDetailsSuccess = true;
+
+                if ($statement1->execute()) {
+                    $isQuotationSuccess = true;
+                }
+
+                $selectQuery = "SELECT quotationId FROM quotations WHERE prescriptionid=?";
+                $selectStatement = $connection->prepare($selectQuery);
+                $selectStatement->bind_param("i", $prescriptionId);
+                $selectStatement->execute();
+                $selectStatement->bind_result($quotationId);
+                $selectStatement->fetch();
+                $selectStatement->close();
+
+                foreach ($decodedData as $drugInfo) {
+                    $drug = $drugInfo['drug'];
+                    $quantity = $drugInfo['quantity'];
+                    $amount = $drugInfo['amount'];
+
+                    $insertQuery_QuotationDetails = "INSERT INTO quotationdetails (quotationId,drug,quantity,amount) VALUES (?,?,?,?)";
+                    $statement2 = $connection->prepare($insertQuery_QuotationDetails);
+                    $statement2->bind_param("isid", $quotationId, $drug, $quantity, $amount);
+
+                    if (!$statement2->execute()) {
+                        $isQuotationDetailsSuccess = false;
+                        break;
+                    }
+                }
+
+                if ($isQuotationSuccess && $isQuotationDetailsSuccess) {
+                    echo "
+                            <div class='SuccessMessageBox'>
+                                <p>Quotation has been submitted!</p>
+                            <div><br>";
+                    echo "
+                    <form method='post' action='prepareQuotation.php'>
+                    <input type='hidden' name='prescriptionId' value='$prescriptionId' />
+                    <button type='submit' class='btn'>GO BACK</button>
+                    </form>
+                        ";
+                } else {
+                    echo "
+                            <div class='ErrorMessageBox'>
+                                 <p>Quotation submission failed!</p>
+                            <div><br>";
+                    echo "
+                    <form method='post' action='prepareQuotation.php'>
+                    <input type='hidden' name='prescriptionId' value='$prescriptionId' />
+                    <button type='submit' class='btn'>GO BACK</button>
+                    </form>
+                        ";
+                }
             }
+
+
+
 
 
 
